@@ -25,10 +25,12 @@ const Signup = () => {
         if (session?.user) {
           const { error } = await supabase
             .from('profiles')
-            .insert([{ id: session.user.id }]);
+            .insert({ id: session.user.id });
           
           if (error) {
             console.error('Error creating profile:', error);
+            setErrorMessage("Error creating user profile");
+            return;
           }
         }
         navigate("/dashboard");
