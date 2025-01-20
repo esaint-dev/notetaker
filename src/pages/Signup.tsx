@@ -33,7 +33,7 @@ const Signup = () => {
             return;
           }
         }
-        navigate("/dashboard");
+        navigate("/notes");
       }
     });
 
@@ -76,7 +76,7 @@ const Signup = () => {
                   },
                 },
               }}
-              providers={[]}
+              providers={["google"]}
               redirectTo={`${window.location.origin}/auth/callback`}
               view="sign_up"
             />
