@@ -13,10 +13,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/components/ui/use-toast";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -34,11 +36,31 @@ const Signup = () => {
           }
         }
         navigate("/notes");
+      } else if (event === "SIGNED_OUT") {
+        // Clear any error messages when signing out
+        setErrorMessage("");
       }
     });
 
-    return () => subscription.unsubscribe();
-  }, [navigate]);
+    // Listen for auth errors
+    const authListener = supabase.auth.onError((error) => {
+      console.error('Auth error:', error);
+      if (error.message.includes('rate_limit')) {
+        toast({
+          variant: "destructive",
+          title: "Please wait",
+          description: "For security purposes, please wait a minute before trying again.",
+        });
+      } else {
+        setErrorMessage(error.message);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      authListener.data.subscription.unsubscribe();
+    };
+  }, [navigate, toast]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
