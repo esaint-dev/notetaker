@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Brain, Rocket, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -10,7 +11,8 @@ const Landing = () => {
       <nav className="border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="text-2xl font-bold">Founder Notes</div>
-          <div className="space-x-4">
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
             <Button variant="ghost" onClick={() => navigate("/login")}>
               Login
             </Button>

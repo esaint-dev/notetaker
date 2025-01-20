@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Notes from "./pages/Notes";
 import AuthCallback from "./pages/AuthCallback";
+import { ThemeProvider } from "./components/theme/ThemeProvider";
 
 const queryClient = new QueryClient();
 
@@ -23,40 +24,42 @@ const App = () => {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route
-              path="/login"
-              element={
-                isAuthenticated ? <Navigate to="/notes" /> : <Login />
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                isAuthenticated ? <Navigate to="/notes" /> : <Signup />
-              }
-            />
-            <Route path="/auth/callback" element={<AuthCallback />} />
-            <Route
-              path="/notes"
-              element={
-                isAuthenticated === false ? (
-                  <Navigate to="/login" />
-                ) : (
-                  <Notes />
-                )
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider defaultTheme="light" storageKey="app-theme">
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route
+                path="/login"
+                element={
+                  isAuthenticated ? <Navigate to="/notes" /> : <Login />
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  isAuthenticated ? <Navigate to="/notes" /> : <Signup />
+                }
+              />
+              <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route
+                path="/notes"
+                element={
+                  isAuthenticated === false ? (
+                    <Navigate to="/login" />
+                  ) : (
+                    <Notes />
+                  )
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 };
 
