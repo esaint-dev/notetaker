@@ -2,9 +2,20 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Brain, Rocket, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -13,10 +24,16 @@ const Landing = () => {
           <div className="text-2xl font-bold">Founder Notes</div>
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Button variant="ghost" onClick={() => navigate("/login")}>
-              Login
-            </Button>
-            <Button onClick={() => navigate("/signup")}>Get Started</Button>
+            {isAuthenticated ? (
+              <Button onClick={() => navigate("/notes")}>My Notes</Button>
+            ) : (
+              <>
+                <Button variant="ghost" onClick={() => navigate("/login")}>
+                  Login
+                </Button>
+                <Button onClick={() => navigate("/signup")}>Get Started</Button>
+              </>
+            )}
           </div>
         </div>
       </nav>
