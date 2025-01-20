@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { Home } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -17,6 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Notes = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -102,76 +106,95 @@ const Notes = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold mb-6">My Notes</h1>
-      
-      <form onSubmit={handleSubmit} className="mb-8 space-y-4">
-        <div>
-          <Input
-            placeholder="Note title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="mb-2"
-          />
-          <Textarea
-            placeholder="Note content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={4}
-          />
+    <div className="min-h-screen bg-background">
+      <nav className="border-b">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="text-2xl font-bold">Founder Notes</div>
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/")}
+              className="flex items-center space-x-2"
+            >
+              <Home className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
-        <Button type="submit" disabled={createNote.isPending}>
-          Add Note
-        </Button>
-      </form>
+      </nav>
 
-      <ScrollArea className="h-[500px] rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Content</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
+      <div className="container mx-auto py-8 px-4">
+        <h1 className="text-2xl font-bold mb-6">My Notes</h1>
+        
+        <form onSubmit={handleSubmit} className="mb-8 space-y-4">
+          <div>
+            <Input
+              placeholder="Note title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="mb-2"
+            />
+            <Textarea
+              placeholder="Note content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={4}
+            />
+          </div>
+          <Button type="submit" disabled={createNote.isPending}>
+            Add Note
+          </Button>
+        </form>
+
+        <ScrollArea className="h-[500px] rounded-md border">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={4} className="text-center">
-                  Loading...
-                </TableCell>
+                <TableHead>Title</TableHead>
+                <TableHead>Content</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
-            ) : notes?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="text-center">
-                  No notes found. Create your first note!
-                </TableCell>
-              </TableRow>
-            ) : (
-              notes?.map((note) => (
-                <TableRow key={note.id}>
-                  <TableCell className="font-medium">{note.title}</TableCell>
-                  <TableCell>{note.content}</TableCell>
-                  <TableCell>
-                    {new Date(note.created_at).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => deleteNote.mutate(note.id)}
-                      disabled={deleteNote.isPending}
-                    >
-                      Delete
-                    </Button>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center">
+                    Loading...
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </ScrollArea>
+              ) : notes?.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center">
+                    No notes found. Create your first note!
+                  </TableCell>
+                </TableRow>
+              ) : (
+                notes?.map((note) => (
+                  <TableRow key={note.id}>
+                    <TableCell className="font-medium">{note.title}</TableCell>
+                    <TableCell>{note.content}</TableCell>
+                    <TableCell>
+                      {new Date(note.created_at).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => deleteNote.mutate(note.id)}
+                        disabled={deleteNote.isPending}
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
+      </div>
     </div>
   );
 };
