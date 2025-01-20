@@ -21,7 +21,7 @@ const Login = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "SIGNED_IN") {
-        navigate("/dashboard");
+        navigate("/Notes");
       }
     });
 
