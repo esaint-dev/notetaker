@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Notes from "./pages/Notes";
 import AuthCallback from "./pages/AuthCallback";
 
 const queryClient = new QueryClient();
@@ -32,23 +33,23 @@ const App = () => {
             <Route
               path="/login"
               element={
-                isAuthenticated ? <Navigate to="/dashboard" /> : <Login />
+                isAuthenticated ? <Navigate to="/notes" /> : <Login />
               }
             />
             <Route
               path="/signup"
               element={
-                isAuthenticated ? <Navigate to="/dashboard" /> : <Signup />
+                isAuthenticated ? <Navigate to="/notes" /> : <Signup />
               }
             />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route
-              path="/dashboard"
+              path="/notes"
               element={
                 isAuthenticated === false ? (
                   <Navigate to="/login" />
                 ) : (
-                  <div>Dashboard (coming soon)</div>
+                  <Notes />
                 )
               }
             />
