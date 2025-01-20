@@ -37,28 +37,24 @@ const Signup = () => {
         }
         navigate("/notes");
       } else if (event === "SIGNED_OUT") {
-        // Clear any error messages when signing out
         setErrorMessage("");
-      }
-    });
-
-    // Listen for auth errors
-    const authListener = supabase.auth.onError((error) => {
-      console.error('Auth error:', error);
-      if (error.message.includes('rate_limit')) {
-        toast({
-          variant: "destructive",
-          title: "Please wait",
-          description: "For security purposes, please wait a minute before trying again.",
-        });
-      } else {
-        setErrorMessage(error.message);
+      } else if (event === "USER_UPDATED") {
+        // Handle rate limit errors and other auth-related errors
+        const error = session?.error;
+        if (error?.message?.includes('rate_limit')) {
+          toast({
+            variant: "destructive",
+            title: "Please wait",
+            description: "For security purposes, please wait a minute before trying again.",
+          });
+        } else if (error) {
+          setErrorMessage(error.message);
+        }
       }
     });
 
     return () => {
       subscription.unsubscribe();
-      authListener.data.subscription.unsubscribe();
     };
   }, [navigate, toast]);
 
