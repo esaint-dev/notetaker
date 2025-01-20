@@ -38,9 +38,9 @@ const Signup = () => {
         navigate("/notes");
       } else if (event === "SIGNED_OUT") {
         setErrorMessage("");
-      } else if (event === "USER_UPDATED") {
-        // Handle rate limit errors and other auth-related errors
-        const error = session?.error;
+      } else if (event === "PASSWORD_RECOVERY") {
+        // Handle rate limit errors
+        const error = (session as any).error;
         if (error?.message?.includes('rate_limit')) {
           toast({
             variant: "destructive",
