@@ -24,6 +24,9 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { Database } from "@/integrations/supabase/types";
+
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 const formSchema = z.object({
   full_name: z.string().min(2, "Name must be at least 2 characters"),
@@ -46,7 +49,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -84,17 +87,22 @@ const Profile = () => {
       setProfile(profile);
       setAvatarUrl(profile.avatar_url);
 
-      const socialLinks = profile.social_links || {
-        twitter: "",
-        linkedin: "",
-        github: "",
+      // Parse social_links with default values if null or invalid
+      const socialLinks = profile.social_links ? 
+        (typeof profile.social_links === 'object' ? profile.social_links : {}) : 
+        {};
+
+      const parsedSocialLinks = {
+        twitter: (socialLinks as any)?.twitter || "",
+        linkedin: (socialLinks as any)?.linkedin || "",
+        github: (socialLinks as any)?.github || "",
       };
 
       form.reset({
         full_name: profile.full_name || "",
         email: profile.email || user.email,
         phone_number: profile.phone_number || "",
-        social_links: socialLinks,
+        social_links: parsedSocialLinks,
       });
     } catch (error: any) {
       toast({
