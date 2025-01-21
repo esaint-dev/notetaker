@@ -81,7 +81,21 @@ const Profile = () => {
         .eq("id", user.id)
         .single();
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        // If profile doesn't exist, create it
+        if (profileError.code === 'PGRST116') {
+          const { data: newProfile, error: createError } = await supabase
+            .from("profiles")
+            .insert({ id: user.id })
+            .select()
+            .single();
+
+          if (createError) throw createError;
+          profile = newProfile;
+        } else {
+          throw profileError;
+        }
+      }
 
       setUser(user);
       setProfile(profile);
@@ -126,16 +140,19 @@ const Profile = () => {
       const fileExt = file.name.split(".").pop();
       const filePath = `${user.id}-${Math.random()}.${fileExt}`;
 
+      // First, upload the file to storage
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
+      // Then get the public URL
       const { data: { publicUrl } } = supabase.storage
         .from("avatars")
         .getPublicUrl(filePath);
 
+      // Finally update the profile with the new avatar URL
       const { error: updateError } = await supabase
         .from("profiles")
         .update({ avatar_url: publicUrl })
@@ -162,6 +179,9 @@ const Profile = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
+      
+      if (!user) throw new Error("No user found");
+
       const { error } = await supabase
         .from("profiles")
         .update({
@@ -178,6 +198,9 @@ const Profile = () => {
         title: "Success",
         description: "Profile updated successfully",
       });
+      
+      // Refresh profile data
+      await getProfile();
     } catch (error: any) {
       toast({
         title: "Error updating profile",
