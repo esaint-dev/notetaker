@@ -75,7 +75,7 @@ const Profile = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      const { data: profile, error: profileError } = await supabase
+      let { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", user.id)
@@ -91,19 +91,19 @@ const Profile = () => {
             .single();
 
           if (createError) throw createError;
-          profile = newProfile;
+          profileData = newProfile;
         } else {
           throw profileError;
         }
       }
 
       setUser(user);
-      setProfile(profile);
-      setAvatarUrl(profile.avatar_url);
+      setProfile(profileData);
+      setAvatarUrl(profileData.avatar_url);
 
       // Parse social_links with default values if null or invalid
-      const socialLinks = profile.social_links ? 
-        (typeof profile.social_links === 'object' ? profile.social_links : {}) : 
+      const socialLinks = profileData.social_links ? 
+        (typeof profileData.social_links === 'object' ? profileData.social_links : {}) : 
         {};
 
       const parsedSocialLinks = {
@@ -113,9 +113,9 @@ const Profile = () => {
       };
 
       form.reset({
-        full_name: profile.full_name || "",
-        email: profile.email || user.email,
-        phone_number: profile.phone_number || "",
+        full_name: profileData.full_name || "",
+        email: profileData.email || user.email,
+        phone_number: profileData.phone_number || "",
         social_links: parsedSocialLinks,
       });
     } catch (error: any) {
