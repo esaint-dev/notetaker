@@ -33,6 +33,10 @@ const formSchema = z.object({
     twitter: z.string().optional(),
     linkedin: z.string().optional(),
     github: z.string().optional(),
+  }).default({
+    twitter: "",
+    linkedin: "",
+    github: "",
   }),
 });
 
@@ -80,15 +84,17 @@ const Profile = () => {
       setProfile(profile);
       setAvatarUrl(profile.avatar_url);
 
+      const socialLinks = profile.social_links || {
+        twitter: "",
+        linkedin: "",
+        github: "",
+      };
+
       form.reset({
         full_name: profile.full_name || "",
         email: profile.email || user.email,
         phone_number: profile.phone_number || "",
-        social_links: profile.social_links || {
-          twitter: "",
-          linkedin: "",
-          github: "",
-        },
+        social_links: socialLinks,
       });
     } catch (error: any) {
       toast({
