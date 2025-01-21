@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { Home } from "lucide-react";
+import { Home, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -25,7 +25,25 @@ const Notes = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  // Fetch notes
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      toast({
+        title: "Success",
+        description: "You have been logged out successfully",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const { data: notes, isLoading } = useQuery({
     queryKey: ["notes"],
     queryFn: async () => {
@@ -119,6 +137,14 @@ const Notes = () => {
               className="flex items-center space-x-2"
             >
               <Home className="h-5 w-5" />
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
             </Button>
           </div>
         </div>

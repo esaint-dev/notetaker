@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Brain, Rocket, Target } from "lucide-react";
+import { ArrowRight, Brain, LogIn, LogOut, Rocket, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -17,6 +19,25 @@ const Landing = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      toast({
+        title: "Success",
+        description: "You have been logged out successfully",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <nav className="border-b">
@@ -25,10 +46,25 @@ const Landing = () => {
           <div className="flex items-center space-x-4">
             <ThemeToggle />
             {isAuthenticated ? (
-              <Button onClick={() => navigate("/notes")}>My Notes</Button>
+              <div className="flex items-center gap-4">
+                <Button onClick={() => navigate("/notes")}>My Notes</Button>
+                <Button 
+                  variant="outline" 
+                  onClick={handleLogout}
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+              </div>
             ) : (
               <>
-                <Button variant="ghost" onClick={() => navigate("/login")}>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => navigate("/login")}
+                  className="flex items-center gap-2"
+                >
+                  <LogIn className="h-4 w-4" />
                   Login
                 </Button>
                 <Button onClick={() => navigate("/signup")}>Get Started</Button>
