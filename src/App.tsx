@@ -9,6 +9,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Notes from "./pages/Notes";
+import Profile from "./pages/Profile";
 import AuthCallback from "./pages/AuthCallback";
 import { ThemeProvider } from "./components/theme/ThemeProvider";
 
@@ -52,6 +53,16 @@ const App = () => {
                     <Navigate to="/login" />
                   ) : (
                     <Notes />
+                  )
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  isAuthenticated === false ? (
+                    <Navigate to="/login" />
+                  ) : (
+                    <Profile />
                   )
                 }
               />
