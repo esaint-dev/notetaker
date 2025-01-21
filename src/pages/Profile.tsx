@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, Camera, Trash2 } from "lucide-react";
+import { Loader2, Camera, Trash2, User, LogOut } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -25,6 +25,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Database } from "@/integrations/supabase/types";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -126,6 +134,25 @@ const Profile = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      toast({
+        title: "Success",
+        description: "You have been logged out successfully",
+      });
+      navigate("/");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -249,8 +276,49 @@ const Profile = () => {
   }
 
   return (
-    <div className="container max-w-2xl py-8">
-      <Card>
+    <div className="min-h-screen bg-background">
+      <nav className="border-b">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="text-2xl font-bold cursor-pointer" onClick={() => navigate("/")}>
+            Founder Notes
+          </div>
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
+            <Button onClick={() => navigate("/notes")}>My Notes</Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={avatarUrl || ""} alt={profile?.full_name || 'User'} />
+                    <AvatarFallback>
+                      <User className="h-6 w-6" />
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1 leading-none">
+                    {profile?.full_name && (
+                      <p className="font-medium">{profile.full_name}</p>
+                    )}
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/profile")}>
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </nav>
+
+      <div className="container max-w-2xl py-8">
+        <Card>
         <CardHeader>
           <CardTitle>Profile Settings</CardTitle>
           <CardDescription>
@@ -399,7 +467,8 @@ const Profile = () => {
             </form>
           </Form>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 };
