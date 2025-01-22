@@ -55,7 +55,7 @@ const Profile = () => {
 
       setUser(user);
       setProfile(profileData);
-      setAvatarUrl(profileData.avatar_url);
+      setAvatarUrl(profileData?.avatar_url);
     } catch (error: any) {
       toast({
         title: "Error loading profile",
@@ -79,13 +79,11 @@ const Profile = () => {
     full_name: profile?.full_name || "",
     email: profile?.email || user.email,
     phone_number: profile?.phone_number || "",
-    social_links: profile?.social_links ? 
-      (typeof profile.social_links === 'object' ? profile.social_links : {}) : 
-      {
-        twitter: "",
-        linkedin: "",
-        github: "",
-      },
+    social_links: {
+      twitter: profile?.social_links?.twitter || "",
+      linkedin: profile?.social_links?.linkedin || "",
+      github: profile?.social_links?.github || "",
+    },
   };
 
   return (
