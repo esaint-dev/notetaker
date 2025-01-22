@@ -80,6 +80,9 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.5s ease-out",
       },
+      backgroundImage: {
+        'grid-pattern': "linear-gradient(to right, #232323 1px, transparent 1px), linear-gradient(to bottom, #232323 1px, transparent 1px)",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

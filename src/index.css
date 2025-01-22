@@ -29,11 +29,11 @@
   }
  
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 240 10% 3.9%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 240 10% 3.9%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 240 10% 3.9%;
     --popover-foreground: 210 40% 98%;
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
@@ -53,10 +53,30 @@
   body {
     @apply bg-background text-foreground font-inter;
   }
+
+  .dark body {
+    background-image: linear-gradient(to right, rgba(35, 35, 35, 0.1) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(35, 35, 35, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-color: #1A1F2C;
+  }
 }
 
 @layer utilities {
   .font-inter {
     font-family: 'Inter', sans-serif;
+  }
+
+  .purple-blur {
+    @apply relative;
+  }
+
+  .purple-blur::before {
+    content: '';
+    @apply absolute -inset-4 bg-[#7E69AB]/30 blur-2xl -z-10 rounded-xl;
+  }
+
+  .dark .purple-blur::before {
+    @apply bg-[#7E69AB]/20;
   }
 }
