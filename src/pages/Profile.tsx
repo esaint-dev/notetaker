@@ -75,14 +75,21 @@ const Profile = () => {
     );
   }
 
+  // Parse social links from profile data ensuring type safety
+  const socialLinks = profile?.social_links as { twitter?: string; linkedin?: string; github?: string; } || {
+    twitter: "",
+    linkedin: "",
+    github: "",
+  };
+
   const initialFormData = {
     full_name: profile?.full_name || "",
     email: profile?.email || user.email,
     phone_number: profile?.phone_number || "",
     social_links: {
-      twitter: profile?.social_links?.twitter || "",
-      linkedin: profile?.social_links?.linkedin || "",
-      github: profile?.social_links?.github || "",
+      twitter: socialLinks.twitter || "",
+      linkedin: socialLinks.linkedin || "",
+      github: socialLinks.github || "",
     },
   };
 
