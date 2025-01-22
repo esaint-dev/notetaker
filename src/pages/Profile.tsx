@@ -277,47 +277,49 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold cursor-pointer" onClick={() => navigate("/")}>
-            Founder Notes
-          </div>
-          <div className="flex items-center space-x-4">
-            <ThemeToggle />
-            <Button onClick={() => navigate("/notes")}>My Notes</Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={avatarUrl || ""} alt={profile?.full_name || 'User'} />
-                    <AvatarFallback>
-                      <User className="h-6 w-6" />
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <div className="flex items-center justify-start gap-2 p-2">
-                  <div className="flex flex-col space-y-1 leading-none">
-                    {profile?.full_name && (
-                      <p className="font-medium">{profile.full_name}</p>
-                    )}
+      <div className="fixed top-0 left-0 right-0 z-50 px-4 py-2">
+        <nav className="mx-auto max-w-7xl bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl">
+          <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div className="text-2xl font-bold cursor-pointer" onClick={() => navigate("/")}>
+              Founder Notes
+            </div>
+            <div className="flex items-center space-x-4">
+              <ThemeToggle />
+              <Button onClick={() => navigate("/notes")}>My Notes</Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={avatarUrl || ""} alt={profile?.full_name || 'User'} />
+                      <AvatarFallback>
+                        <User className="h-6 w-6" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      {profile?.full_name && (
+                        <p className="font-medium">{profile.full_name}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/profile")}>
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogout}>
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate("/profile")}>
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
 
-      <div className="container max-w-2xl py-8">
+      <div className="container max-w-2xl py-8 mt-24">
         <Card>
         <CardHeader>
           <CardTitle>Profile Settings</CardTitle>
