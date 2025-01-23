@@ -21,12 +21,15 @@ const Login = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "SIGNED_IN") {
-        navigate("/Notes");
+        navigate("/notes");
       }
     });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  // Get the current URL's origin (protocol + hostname + port)
+  const origin = window.location.origin;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
@@ -64,8 +67,12 @@ const Login = () => {
                   },
                 },
               }}
-              providers={[]}
-              redirectTo={`${window.location.origin}/auth/callback`}
+              providers={["google"]}
+              redirectTo={`${origin}/auth/callback`}
+              onError={(error) => {
+                console.error('Auth error:', error);
+                setErrorMessage(error.message);
+              }}
             />
           </CardContent>
         </Card>

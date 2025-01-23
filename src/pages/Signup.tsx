@@ -38,18 +38,6 @@ const Signup = () => {
         navigate("/notes");
       } else if (event === "SIGNED_OUT") {
         setErrorMessage("");
-      } else if (event === "PASSWORD_RECOVERY") {
-        // Handle rate limit errors
-        const error = (session as any).error;
-        if (error?.message?.includes('rate_limit')) {
-          toast({
-            variant: "destructive",
-            title: "Please wait",
-            description: "For security purposes, please wait a minute before trying again.",
-          });
-        } else if (error) {
-          setErrorMessage(error.message);
-        }
       }
     });
 
@@ -57,6 +45,9 @@ const Signup = () => {
       subscription.unsubscribe();
     };
   }, [navigate, toast]);
+
+  // Get the current URL's origin (protocol + hostname + port)
+  const origin = window.location.origin;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
@@ -95,8 +86,12 @@ const Signup = () => {
                 },
               }}
               providers={["google"]}
-              redirectTo={`${window.location.origin}/auth/callback`}
+              redirectTo={`${origin}/auth/callback`}
               view="sign_up"
+              onError={(error) => {
+                console.error('Auth error:', error);
+                setErrorMessage(error.message);
+              }}
             />
           </CardContent>
         </Card>
