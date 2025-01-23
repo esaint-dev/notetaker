@@ -88,10 +88,6 @@ const Signup = () => {
               providers={["google"]}
               redirectTo={`${origin}/auth/callback`}
               view="sign_up"
-              onError={(error) => {
-                console.error('Auth error:', error);
-                setErrorMessage(error.message);
-              }}
             />
           </CardContent>
         </Card>

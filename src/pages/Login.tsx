@@ -69,10 +69,6 @@ const Login = () => {
               }}
               providers={["google"]}
               redirectTo={`${origin}/auth/callback`}
-              onError={(error) => {
-                console.error('Auth error:', error);
-                setErrorMessage(error.message);
-              }}
             />
           </CardContent>
         </Card>
