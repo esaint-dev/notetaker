@@ -82,6 +82,7 @@ export default {
       },
       backgroundImage: {
         'grid-pattern': "linear-gradient(to right, #232323 1px, transparent 1px), linear-gradient(to bottom, #232323 1px, transparent 1px)",
+        'button-gradient': "linear-gradient(to right, #452095, #e59b7d)",
       },
     },
   },
