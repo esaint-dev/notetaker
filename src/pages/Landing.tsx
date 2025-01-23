@@ -58,8 +58,8 @@ const Landing = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="border-b">
+    <div className="min-h-screen">
+      <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="text-2xl font-bold">Founder Notes</div>
           <div className="flex items-center space-x-4">
@@ -156,7 +156,7 @@ const Landing = () => {
         </section>
       </main>
 
-      <footer className="border-t py-8">
+      <footer className="border-t py-8 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
           © 2024 Founder Notes. All rights reserved.
         </div>
@@ -174,7 +174,7 @@ const FeatureCard = ({
   title: string;
   description: string;
 }) => (
-  <div className="p-6 rounded-lg bg-background border purple-blur">
+  <div className="p-6 rounded-lg bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border purple-blur">
     <Icon className="w-12 h-12 text-accent mb-4" />
     <h3 className="text-xl font-semibold mb-2">{title}</h3>
     <p className="text-muted-foreground">{description}</p>
